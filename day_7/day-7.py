@@ -5,6 +5,7 @@ import random
 import hangman_words
 import art
 
+
 print(art.logo)
 word = random.choice(hangman_words.word_list)
 word_underscored = ""

@@ -35,13 +35,21 @@ def get_hand_value(cards):
     return cards_value
 
 
+def show_hand(hand):
+    cards = []
+    for card in hand:
+        cards.append(show_card(card))
+    print(*cards)
+
+
+
 def initial_deal():
-    player_cards.append(0)
-    player_cards.append(0)
+    player_cards.append(get_card_index())
+    player_cards.append(get_card_index())
     dealer_cards.append(get_card_index())
     dealer_cards.append(get_card_index())
-    print(f"Your hand is: {show_card(player_cards[0])} {show_card(player_cards[1])} .")
-    print(f"Hand value is: {get_hand_value(player_cards)}")
 
 
 initial_deal()
+show_hand(player_cards)
+print(get_hand_value(player_cards))

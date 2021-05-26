@@ -1,9 +1,11 @@
 import random
 import art
+import os
+import time
 
-print(art.logo)
-player_cards = []
-dealer_cards = []
+
+def cls():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 
 def show_card(card_index):
@@ -35,21 +37,68 @@ def get_hand_value(cards):
     return cards_value
 
 
-def show_hand(hand):
+def show_hand(player, hand):
     cards = []
     for card in hand:
         cards.append(show_card(card))
+    print(f"{player} hand:")
     print(*cards)
+    print(f"Value of player hand is: {get_hand_value(hand)}")
 
+
+def in_game(deck):
+    if get_hand_value(deck) <= 21:
+        return True
+    else:
+        return False
 
 
 def initial_deal():
     player_cards.append(get_card_index())
     player_cards.append(get_card_index())
     dealer_cards.append(get_card_index())
-    dealer_cards.append(get_card_index())
+
+
+def draw_card(deck):
+    deck.append(get_card_index())
+
+
+player_cards = []
+dealer_cards = []
+
+
+def show_decks(delay):
+    print(art.logo)
+    show_hand("Player", player_cards)
+    show_hand("Dealer", dealer_cards)
+    time.sleep(delay)
 
 
 initial_deal()
-show_hand(player_cards)
-print(get_hand_value(player_cards))
+while in_game(player_cards) and in_game(dealer_cards):
+    show_decks(0)
+    decision = input("Do you want to draw a card 'y' or pass 'n' ? ")
+    while not (decision == 'n' or decision == 'y'):
+        decision = input("Wrong input! Type 'y' to draw a card and 'n' if you want to pass")
+    if decision == 'y':
+        draw_card(player_cards)
+    if decision == 'n':
+        while get_hand_value(player_cards) > get_hand_value(dealer_cards):
+            draw_card(dealer_cards)
+            show_decks(2)
+        break
+    cls()
+if not in_game(player_cards):
+    cls()
+    show_decks(0)
+    print("You got more than 21!! You lost!")
+elif not in_game(dealer_cards):
+    cls()
+    show_decks(0)
+    print("Dealer have more than 21!! You won!")
+elif get_hand_value(player_cards) > get_hand_value(dealer_cards):
+    print("You won!")
+elif get_hand_value(player_cards) == get_hand_value(dealer_cards):
+    print("Draw")
+else:
+    print("You lost!")

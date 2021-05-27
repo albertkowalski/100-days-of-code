@@ -63,10 +63,6 @@ def draw_card(deck):
     deck.append(get_card_index())
 
 
-player_cards = []
-dealer_cards = []
-
-
 def show_decks(delay):
     print(art.logo)
     show_hand("Player", player_cards)
@@ -74,31 +70,40 @@ def show_decks(delay):
     time.sleep(delay)
 
 
-initial_deal()
-while in_game(player_cards) and in_game(dealer_cards):
-    show_decks(0)
-    decision = input("Do you want to draw a card 'y' or pass 'n' ? ")
-    while not (decision == 'n' or decision == 'y'):
-        decision = input("Wrong input! Type 'y' to draw a card and 'n' if you want to pass")
-    if decision == 'y':
-        draw_card(player_cards)
+keep_playing = True
+while keep_playing:
+    player_cards = []
+    dealer_cards = []
+    initial_deal()
+    while in_game(player_cards) and in_game(dealer_cards):
+        show_decks(0)
+        decision = input("Do you want to draw a card 'y' or pass 'n' ? ")
+        while not (decision == 'n' or decision == 'y'):
+            decision = input("Wrong input! Type 'y' to draw a card and 'n' if you want to pass")
+        if decision == 'y':
+            draw_card(player_cards)
+        if decision == 'n':
+            while get_hand_value(player_cards) > get_hand_value(dealer_cards) and get_hand_value(dealer_cards) < 17:
+                draw_card(dealer_cards)
+                show_decks(2)
+            break
+        cls()
+    if not in_game(player_cards):
+        cls()
+        show_decks(0)
+        print("You got more than 21!! You lost!")
+    elif not in_game(dealer_cards):
+        cls()
+        show_decks(0)
+        print("Dealer have more than 21!! You won!")
+    elif get_hand_value(player_cards) > get_hand_value(dealer_cards):
+        print("You won!")
+    elif get_hand_value(player_cards) == get_hand_value(dealer_cards):
+        print("Draw")
+    else:
+        print("You lost!")
+    decision = input("Do You want to play again? Type 'y' or 'n'")
+    while not (decision == 'y' or decision == 'n'):
+        decision = input("Please pick 'y' or 'n'")
     if decision == 'n':
-        while get_hand_value(player_cards) > get_hand_value(dealer_cards):
-            draw_card(dealer_cards)
-            show_decks(2)
-        break
-    cls()
-if not in_game(player_cards):
-    cls()
-    show_decks(0)
-    print("You got more than 21!! You lost!")
-elif not in_game(dealer_cards):
-    cls()
-    show_decks(0)
-    print("Dealer have more than 21!! You won!")
-elif get_hand_value(player_cards) > get_hand_value(dealer_cards):
-    print("You won!")
-elif get_hand_value(player_cards) == get_hand_value(dealer_cards):
-    print("Draw")
-else:
-    print("You lost!")
+        keep_playing = False
